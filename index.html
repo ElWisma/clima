@@ -4,18 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplicación del Clima</title>
+    <meta name="theme-color" content="#eaf3f7">
+    <meta name="description" content="Consulta el clima actual de Tulcingo de Valle, Puebla.">
+    <title>Clima actual | Tulcingo de Valle</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Reporte del Clima</h1>
-    
-    <!-- Contenedor donde se mostrarán los datos -->
-    <div id="tarjeta-clima">
-        <p id="temperatura">Consultando temperatura...</p>
-        <p id="viento">Consultando viento...</p>
-    </div>
+    <main class="pagina">
+        <section class="tarjeta-clima" aria-labelledby="titulo">
+            <header class="encabezado">
+                <div class="marca" aria-hidden="true">☀</div>
+                <p class="etiqueta">EL CLIMA HOY</p>
+                <h1 id="titulo">Tulcingo de Valle</h1>
+                <p class="ubicacion">Puebla, México</p>
+            </header>
 
-    <!-- Vinculación del archivo lógico -->
+            <div id="estado-clima" class="estado-clima" role="status" aria-live="polite">
+                <span id="icono-clima" class="icono-clima" aria-hidden="true">…</span>
+                <p id="descripcion-clima">Consultando el clima…</p>
+            </div>
+
+            <div class="datos-clima" aria-label="Datos del clima actual">
+                <div class="dato">
+                    <span class="dato-icono" aria-hidden="true">🌡</span>
+                    <div>
+                        <p class="dato-etiqueta">Temperatura</p>
+                        <p id="temperatura" class="dato-valor">-- °C</p>
+                    </div>
+                </div>
+                <div class="dato">
+                    <span class="dato-icono" aria-hidden="true">💨</span>
+                    <div>
+                        <p class="dato-etiqueta">Viento</p>
+                        <p id="viento" class="dato-valor">-- km/h</p>
+                    </div>
+                </div>
+            </div>
+
+            <p id="actualizado" class="actualizado"></p>
+            <button id="actualizar" class="boton-actualizar" type="button">
+                <span aria-hidden="true">↻</span> Actualizar
+            </button>
+            <p class="fuente">Datos de <a href="https://open-meteo.com/" target="_blank" rel="noreferrer">Open-Meteo</a></p>
+        </section>
+    </main>
     <script src="app.js"></script>
 </body>
 </html>

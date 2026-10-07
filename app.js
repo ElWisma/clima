@@ -1,41 +1,91 @@
-// app.js
-// app.js
+const urlAPI = 'https://api.open-meteo.com/v1/forecast?latitude=18.0383&longitude=-98.4429&current=temperature_2m,wind_speed_10m,weather_code&timezone=auto';
 
-// 1. Guardar la URL generada en Open-Meteo en una constante
-// SOLUCIÓN: Se agregó "&current_weather=true" al final de la URL
-const urlAPI = 'https://api.open-meteo.com/v1/forecast?latitude=18.0383&longitude=-98.4429&hourly=temperature_2m,relative_humidity_2m,rain,weather_code,pressure_msl,visibility,apparent_temperature,precipitation_probability,precipitation&current_weather=true';
+const elementoTemperatura = document.getElementById('temperatura');
+const elementoViento = document.getElementById('viento');
+const elementoDescripcion = document.getElementById('descripcion-clima');
+const elementoIcono = document.getElementById('icono-clima');
+const elementoEstado = document.getElementById('estado-clima');
+const elementoActualizado = document.getElementById('actualizado');
+const botonActualizar = document.getElementById('actualizar');
 
-// 2. Crear una función asíncrona para obtener los datos
+const condicionesClima = {
+    0: { descripcion: 'Despejado', icono: '☀️' },
+    1: { descripcion: 'Mayormente despejado', icono: '🌤️' },
+    2: { descripcion: 'Parcialmente nublado', icono: '⛅' },
+    3: { descripcion: 'Nublado', icono: '☁️' },
+    45: { descripcion: 'Niebla', icono: '🌫️' },
+    48: { descripcion: 'Niebla con escarcha', icono: '🌫️' },
+    51: { descripcion: 'Llovizna ligera', icono: '🌦️' },
+    53: { descripcion: 'Llovizna moderada', icono: '🌦️' },
+    55: { descripcion: 'Llovizna intensa', icono: '🌧️' },
+    56: { descripcion: 'Llovizna helada ligera', icono: '🌧️' },
+    57: { descripcion: 'Llovizna helada intensa', icono: '🌧️' },
+    61: { descripcion: 'Lluvia ligera', icono: '🌦️' },
+    63: { descripcion: 'Lluvia moderada', icono: '🌧️' },
+    65: { descripcion: 'Lluvia intensa', icono: '🌧️' },
+    66: { descripcion: 'Lluvia helada ligera', icono: '🌧️' },
+    67: { descripcion: 'Lluvia helada intensa', icono: '🌧️' },
+    71: { descripcion: 'Nevada ligera', icono: '🌨️' },
+    73: { descripcion: 'Nevada moderada', icono: '🌨️' },
+    75: { descripcion: 'Nevada intensa', icono: '❄️' },
+    77: { descripcion: 'Granos de nieve', icono: '🌨️' },
+    80: { descripcion: 'Chubascos ligeros', icono: '🌦️' },
+    81: { descripcion: 'Chubascos moderados', icono: '🌧️' },
+    82: { descripcion: 'Chubascos violentos', icono: '⛈️' },
+    85: { descripcion: 'Chubascos de nieve ligeros', icono: '🌨️' },
+    86: { descripcion: 'Chubascos de nieve intensos', icono: '❄️' },
+    95: { descripcion: 'Tormenta', icono: '⛈️' },
+    96: { descripcion: 'Tormenta con granizo ligero', icono: '⛈️' },
+    99: { descripcion: 'Tormenta con granizo intenso', icono: '⛈️' }
+};
+
 async function obtenerClima() {
+    botonActualizar.disabled = true;
+    botonActualizar.innerHTML = '<span aria-hidden="true">↻</span> Actualizando…';
+    elementoEstado.classList.remove('error');
+    elementoDescripcion.textContent = 'Consultando el clima…';
+    elementoIcono.textContent = '…';
+
     try {
-        // Realizar la petición a la red
         const respuesta = await fetch(urlAPI);
-        
-        // Verificar si hubo un error en la conexión
         if (!respuesta.ok) {
-            throw new Error('No se pudo conectar con el servidor de Open-Meteo');
+            throw new Error(`Open-Meteo respondió con estado ${respuesta.status}`);
         }
 
-        // Convertir el texto recibido a formato JSON
-        const datosJSON = await respuesta.json();
-        
-        // Extraer el objeto específico del clima actual. (Ahora sí existe en el JSON)
-        const climaActual = datosJSON.current_weather;
+        const datos = await respuesta.json();
+        const climaActual = datos.current;
+        if (
+            !climaActual ||
+            !Number.isFinite(climaActual.temperature_2m) ||
+            !Number.isFinite(climaActual.wind_speed_10m) ||
+            !Number.isFinite(climaActual.weather_code)
+        ) {
+            throw new Error('La respuesta del servicio no contiene datos de clima válidos');
+        }
 
-        // 3. Modificar el DOM (HTML) con los datos extraídos
-        const elementoTemperatura = document.getElementById('temperatura');
-        const elementoViento = document.getElementById('viento');
+        const condicion = condicionesClima[climaActual.weather_code] || {
+            descripcion: 'Condición meteorológica actual',
+            icono: '🌡️'
+        };
 
-        elementoTemperatura.textContent = `Temperatura actual: ${climaActual.temperature} °C`;
-        elementoViento.textContent = `Velocidad del viento: ${climaActual.windspeed} km/h`;
-
+        elementoTemperatura.textContent = `${Math.round(climaActual.temperature_2m)} °C`;
+        elementoViento.textContent = `${Math.round(climaActual.wind_speed_10m)} km/h`;
+        elementoDescripcion.textContent = condicion.descripcion;
+        elementoIcono.textContent = condicion.icono;
+        elementoActualizado.textContent = datos.current.time
+            ? `Actualizado: ${datos.current.time.replace('T', ' ')}`
+            : '';
     } catch (error) {
-        // Manejo de errores (ej. sin conexión a internet)
-        console.error('Detalle del error:', error);
-        document.getElementById('temperatura').textContent = 'Error al cargar los datos del clima.';
-        document.getElementById('viento').textContent = '';
+        console.error('No se pudo obtener el clima:', error);
+        elementoEstado.classList.add('error');
+        elementoIcono.textContent = '!';
+        elementoDescripcion.textContent = 'No se pudo cargar el clima. Inténtalo de nuevo.';
+        elementoActualizado.textContent = '';
+    } finally {
+        botonActualizar.disabled = false;
+        botonActualizar.innerHTML = '<span aria-hidden="true">↻</span> Actualizar';
     }
 }
 
-// 4. Ejecutar la función para que se active al abrir la página
+botonActualizar.addEventListener('click', obtenerClima);
 obtenerClima();

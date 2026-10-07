@@ -1,0 +1,218 @@
+:root {
+    color-scheme: light;
+    font-family: "Segoe UI", Arial, sans-serif;
+    color: #183044;
+    background: #eaf3f7;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(ellipse at 15% 10%, #fff 0, transparent 36%),
+        linear-gradient(145deg, #eaf3f7, #dcebf1);
+}
+
+.pagina {
+    display: grid;
+    min-height: 100vh;
+    place-items: center;
+    padding: 24px;
+}
+
+.tarjeta-clima {
+    width: min(100%, 410px);
+    padding: 36px;
+    border: 1px solid rgb(255 255 255 / 80%);
+    border-radius: 24px;
+    background: rgb(255 255 255 / 92%);
+    box-shadow: 0 20px 55px rgb(33 66 86 / 12%);
+    text-align: center;
+}
+
+.encabezado {
+    margin-bottom: 28px;
+}
+
+.marca {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 18px;
+    place-items: center;
+    border-radius: 16px;
+    background: #fff3d7;
+    color: #e49b21;
+    font-size: 27px;
+}
+
+.etiqueta,
+.dato-etiqueta {
+    color: #738797;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.etiqueta {
+    margin: 0 0 8px;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(23px, 6vw, 29px);
+    letter-spacing: -0.04em;
+}
+
+.ubicacion {
+    margin: 7px 0 0;
+    color: #738797;
+    font-size: 15px;
+}
+
+.estado-clima {
+    display: grid;
+    min-height: 132px;
+    align-content: center;
+    justify-items: center;
+    border-radius: 18px;
+    background: #f1f7fa;
+}
+
+.icono-clima {
+    font-size: 47px;
+    line-height: 1.2;
+}
+
+#descripcion-clima {
+    margin: 8px 0 0;
+    color: #3c5669;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.estado-clima.error {
+    background: #fff2f0;
+}
+
+.estado-clima.error #descripcion-clima {
+    color: #a33d32;
+}
+
+.datos-clima {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 16px 0 20px;
+}
+
+.dato {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 14px 12px;
+    border: 1px solid #e7eef2;
+    border-radius: 15px;
+    text-align: left;
+}
+
+.dato-icono {
+    font-size: 21px;
+}
+
+.dato-etiqueta {
+    margin: 0 0 4px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+}
+
+.dato-valor {
+    margin: 0;
+    color: #183044;
+    font-size: 17px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.actualizado {
+    min-height: 16px;
+    margin: 0 0 14px;
+    color: #8192a0;
+    font-size: 12px;
+}
+
+.boton-actualizar {
+    width: 100%;
+    padding: 13px 18px;
+    border: 0;
+    border-radius: 12px;
+    background: #26739a;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.boton-actualizar:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: #1d607f;
+}
+
+.boton-actualizar:focus-visible {
+    outline: 3px solid #92cde7;
+    outline-offset: 3px;
+}
+
+.boton-actualizar:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.fuente {
+    margin: 18px 0 0;
+    color: #8192a0;
+    font-size: 12px;
+}
+
+.fuente a {
+    color: #26739a;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+@media (max-width: 380px) {
+    .tarjeta-clima {
+        padding: 28px 22px;
+    }
+
+    .dato {
+        gap: 7px;
+        padding: 12px 9px;
+    }
+
+    .dato-valor {
+        font-size: 15px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}
